@@ -7,83 +7,33 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rbc.iso20022.model.Pacs008;
-import com.rbc.iso20022.parser.Pacs008Parser;
-import com.rbc.iso20022.service.AuditService;
-import com.rbc.iso20022.service.PaymentService;
+import com.rbc.iso20022.service.Pacs008Service;
+import com.rbc.iso20022.validation.HeaderValidator;
 
-
+import lombok.RequiredArgsConstructor;
 
 @RestController
-
 @RequestMapping("/payments")
-
+@RequiredArgsConstructor
 public class PaymentController {
 
+   private final Pacs008Service pacs008Service = new Pacs008Service();
+    private final HeaderValidator headerValidator = new HeaderValidator();
 
+    @PostMapping(
+            value = "/pacs008",
+            consumes = "application/xml",
+            produces = "application/json")
+    public ResponseEntity<?> receivePayment(
+            @RequestHeader("X-Request-ID") String requestId,
+            @RequestHeader("X-Correlation-ID") String correlationId,
+            @RequestBody String xmlRequest) {
 
-private final Pacs008Parser parser;
+        headerValidator.validate(requestId, correlationId);
 
-private final PaymentService service;
-
-private final AuditService audit;
-public boolean stat;
-
-
-public PaymentController(
-Pacs008Parser parser,
-PaymentService service,
-AuditService audit
-){
-
-this.parser=parser;
-this.service=service;
-this.audit=audit;
-
-}
-
-
-
-@PostMapping(
-consumes="application/xml"
-)
-
-public ResponseEntity<?> receive(
-
-@RequestHeader("X-Message-Id")
-String headerId,
-
-
-@RequestHeader("X-Origin-Bank")
-String origin,
-
-
-@RequestBody String xml
-
-)
-throws Exception {
-
-
-
-audit.record(
-"PAYMENT_RECEIVED",
-headerId,
-xml
-);
-
-Pacs008 pacs = parser.parse(xml);
-
-service.process(pacs);
-
-if (service.stat) {
-	return ResponseEntity.ok().body("Payment accepted");}else {
-	return ResponseEntity.badRequest().body("Your request did not pass validations");	
-}
-
-
-
-}
-
-
+        return ResponseEntity.ok(
+                pacs008Service.process(xmlRequest));
+  
+    }
 
 }

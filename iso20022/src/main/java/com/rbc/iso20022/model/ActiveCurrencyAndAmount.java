@@ -1,0 +1,26 @@
+package com.rbc.iso20022.model;
+
+
+import java.math.BigDecimal;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlValue;
+import lombok.Data;
+
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ActiveCurrencyAndAmount {
+
+    @XmlValue
+    private BigDecimal value;
+
+    @XmlAttribute(name="Ccy")
+    private String currency;
+
+	public BigDecimal getValue() {
+		// TODO Auto-generated method stub
+		return value;
+	}
+}

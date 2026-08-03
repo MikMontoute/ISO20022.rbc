@@ -1,40 +1,34 @@
 package com.rbc.iso20022.parser;
 
-
 import java.io.StringReader;
-
-import org.springframework.stereotype.Component;
-
-import com.rbc.iso20022.model.Pacs008;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
-
-
-@Component
-
 public class Pacs008Parser {
 
+    private Pacs008Parser() {
+    }
 
-public Pacs008 parse(String xml)
-throws Exception{
+    public static <T> T parse(String xml,
+                              Class<T> clazz) {
 
+        try {
 
-    JAXBContext context =
-        JAXBContext.newInstance(Pacs008.class);
+            JAXBContext context =
+                    JAXBContext.newInstance(clazz);
 
+            Unmarshaller unmarshaller =
+                    context.createUnmarshaller();
 
-    Unmarshaller unmarshaller =
-        context.createUnmarshaller();
+            return clazz.cast(
+                    unmarshaller.unmarshal(
+                            new StringReader(xml)));
 
+        } catch (Exception e) {
 
-    return 
-    (Pacs008)unmarshaller.unmarshal(
-        new StringReader(xml)
-    );
-
-}
-
-
+            throw new RuntimeException(
+                    "Invalid XML", e);
+        }
+    }
 }
