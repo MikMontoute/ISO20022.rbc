@@ -23,4 +23,9 @@ public class ActiveCurrencyAndAmount {
 		// TODO Auto-generated method stub
 		return value;
 	}
+
+	public String getCurrency() {
+		// TODO Auto-generated method stub
+		return currency;
+	}
 }

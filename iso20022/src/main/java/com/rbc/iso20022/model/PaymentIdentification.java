@@ -9,12 +9,25 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentIdentification {
 
-    @XmlElement(name = "InstrId")
+    @XmlElement(name = "InstrId",
+    		namespace = "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12")
     private String instrId;
 
-    @XmlElement(name = "EndToEndId")
+    @XmlElement(name = "EndToEndId",
+    		namespace = "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12")
     private String endToEndId;
 
-    @XmlElement(name = "TxId")
+    @XmlElement(name = "TxId",
+    		namespace = "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12")
     private String txId;
+
+	public Object getTxId() {
+		// TODO Auto-generated method stub
+		return txId;
+	}
+
+	public String getEndToEndId() {
+		// TODO Auto-generated method stub
+		return endToEndId;
+	}
 }

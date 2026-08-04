@@ -2,6 +2,8 @@ package com.rbc.iso20022.parser;
 
 import java.io.StringReader;
 
+import com.rbc.iso20022.model.Document;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
@@ -10,25 +12,24 @@ public class Pacs008Parser {
     private Pacs008Parser() {
     }
 
-    public static <T> T parse(String xml,
-                              Class<T> clazz) {
+    public static Document parse(String xml) {
 
         try {
 
             JAXBContext context =
-                    JAXBContext.newInstance(clazz);
+                    JAXBContext.newInstance(Document.class);
 
             Unmarshaller unmarshaller =
                     context.createUnmarshaller();
 
-            return clazz.cast(
-                    unmarshaller.unmarshal(
-                            new StringReader(xml)));
+            return (Document) unmarshaller.unmarshal(
+                    new StringReader(xml));
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
 
             throw new RuntimeException(
-                    "Invalid XML", e);
+                    "Your PACS.008 message is not in the correct XML format",
+                    ex);
         }
     }
 }

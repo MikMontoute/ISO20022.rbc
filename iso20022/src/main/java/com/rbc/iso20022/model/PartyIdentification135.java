@@ -16,4 +16,9 @@ public class PartyIdentification135 {
     @XmlElement(name = "PstlAdr",
     		namespace = "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12")
     private PostalAddress24 pstlAdr;
+
+	public String getNm() {
+		// TODO Auto-generated method stub
+		return nm;
+	}
 }

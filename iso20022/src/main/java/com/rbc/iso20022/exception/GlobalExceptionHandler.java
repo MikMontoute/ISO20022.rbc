@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> validationException(
-            ValidationException ex) {
+	@ExceptionHandler(DuplicateMessageException.class)
+	public ResponseEntity<?> handleDuplicate(
+	        DuplicateMessageException ex) {
 
-        return ResponseEntity.badRequest()
-                .body(Map.of(
-                        "status", "FAILED",
-                        "message", ex.getMessage()));
-    }
+	    return ResponseEntity.status(409)
+	            .body(Map.of(
+	                    "status", "FAILED",
+	                    "message", ex.getMessage()));
+	}
 }
