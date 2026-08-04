@@ -3,7 +3,13 @@ package com.rbc.iso20022.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Data

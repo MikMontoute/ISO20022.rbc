@@ -6,14 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.rbc.iso20022.entity.PacsMessageEntity;
 import com.rbc.iso20022.exception.DuplicateMessageException;
+import com.rbc.iso20022.model.CreditTransferTransaction64;
 import com.rbc.iso20022.model.Document;
 import com.rbc.iso20022.parser.Pacs008Parser;
 import com.rbc.iso20022.repository.PacsMessageRepository;
 
 @Service
 public class Pacs008Service {
-	
-
 
     private final PacsMessageRepository repository;
 
@@ -29,9 +28,6 @@ public class Pacs008Service {
 
         Document document =
                 Pacs008Parser.parse(xml);
-        
-  //  	TestLombok test = new TestLombok();
-    //	test.getName();
 
         String messageId =
                 extractMessageId(document);
@@ -42,23 +38,27 @@ public class Pacs008Service {
                     "Duplicate PACS.008 MessageId: "
                             + messageId);
         }
-        var payment = document.getFIToFICstmrCdtTrf();
 
-        var tx = payment.getCdtTrfTxInf().get(0);
-        
-        
+        var payment =
+                document.getFIToFICstmrCdtTrf();
+
+        var tx =
+                payment.getCdtTrfTxInf().get(0);
+
+        validateBusinessRules(tx);
+
         PacsMessageEntity entity =
                 new PacsMessageEntity();
-        
+
         if (tx.getDbtrAcct() != null
                 && tx.getDbtrAcct().getId() != null
                 && tx.getDbtrAcct().getId().getOthr() != null) {
 
             entity.setDebtorAccount(
                     tx.getDbtrAcct()
-                      .getId()
-                      .getOthr()
-                      .getId());
+                            .getId()
+                            .getOthr()
+                            .getId());
         }
 
         if (tx.getCdtrAcct() != null
@@ -67,9 +67,9 @@ public class Pacs008Service {
 
             entity.setCreditorAccount(
                     tx.getCdtrAcct()
-                      .getId()
-                      .getOthr()
-                      .getId());
+                            .getId()
+                            .getOthr()
+                            .getId());
         }
 
         if (tx.getDbtrAgt() != null
@@ -77,8 +77,8 @@ public class Pacs008Service {
 
             entity.setDebtorBic(
                     tx.getDbtrAgt()
-                      .getFinInstnId()
-                      .getBICFI());
+                            .getFinInstnId()
+                            .getBICFI());
         }
 
         if (tx.getCdtrAgt() != null
@@ -86,36 +86,35 @@ public class Pacs008Service {
 
             entity.setCreditorBic(
                     tx.getCdtrAgt()
-                      .getFinInstnId()
-                      .getBICFI());
+                            .getFinInstnId()
+                            .getBICFI());
         }
 
-        entity.setMessageId(
-                messageId);
+        entity.setMessageId(messageId);
 
         entity.setTxId(
                 tx.getPmtId()
-                  .getTxId());
+                        .getTxId());
 
         entity.setEndToEndId(
                 tx.getPmtId()
-                  .getEndToEndId());
+                        .getEndToEndId());
 
         entity.setDebtorName(
                 tx.getDbtr()
-                  .getNm());
+                        .getNm());
 
         entity.setCreditorName(
                 tx.getCdtr()
-                  .getNm());
+                        .getNm());
 
         entity.setCurrency(
                 tx.getIntrBkSttlmAmt()
-                  .getCurrency());
+                        .getCurrency());
 
         entity.setAmount(
                 tx.getIntrBkSttlmAmt()
-                  .getValue());
+                        .getValue());
 
         entity.setCorrelationId(
                 correlationId);
@@ -127,7 +126,7 @@ public class Pacs008Service {
                 LocalDateTime.now());
 
         entity.setOriginalXml(xml);
-        
+
         repository.save(entity);
 
         return "SUCCESS";
@@ -166,13 +165,108 @@ public class Pacs008Service {
                         .getGrpHdr()
                         .getMsgId();
 
-        if (messageId == null ||
-                messageId.isBlank()) {
+        if (messageId == null
+                || messageId.isBlank()) {
 
             throw new IllegalArgumentException(
                     "MsgId missing");
         }
 
         return messageId;
+    }
+
+    private void validateBusinessRules(
+            CreditTransferTransaction64 tx) {
+
+        String senderBic = null;
+        String receiverBic = null;
+
+        if (tx.getDbtrAgt() != null
+                && tx.getDbtrAgt().getFinInstnId() != null) {
+
+            senderBic =
+                    tx.getDbtrAgt()
+                            .getFinInstnId()
+                            .getBICFI();
+        }
+
+        if (tx.getCdtrAgt() != null
+                && tx.getCdtrAgt().getFinInstnId() != null) {
+
+            receiverBic =
+                    tx.getCdtrAgt()
+                            .getFinInstnId()
+                            .getBICFI();
+        }
+
+        if (senderBic != null
+                && receiverBic != null
+                && senderBic.equalsIgnoreCase(receiverBic)) {
+
+            throw new IllegalArgumentException(
+                    "Sender and Receiver BIC cannot be the same");
+        }
+
+        String senderAccount = null;
+        String receiverAccount = null;
+
+        if (tx.getDbtrAcct() != null
+                && tx.getDbtrAcct().getId() != null
+                && tx.getDbtrAcct().getId().getOthr() != null) {
+
+            senderAccount =
+                    tx.getDbtrAcct()
+                            .getId()
+                            .getOthr()
+                            .getId();
+        }
+
+        if (tx.getCdtrAcct() != null
+                && tx.getCdtrAcct().getId() != null
+                && tx.getCdtrAcct().getId().getOthr() != null) {
+
+            receiverAccount =
+                    tx.getCdtrAcct()
+                            .getId()
+                            .getOthr()
+                            .getId();
+        }
+
+        validateSenderAccount(senderAccount);
+        validateReceiverAccount(receiverAccount);
+    }
+
+    private void validateSenderAccount(
+            String accountNumber) {
+
+        if (accountNumber == null
+                || accountNumber.isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Sender account is missing");
+        }
+
+        if (!accountNumber.matches("^FI\\d{3}\\d+$")) {
+
+            throw new IllegalArgumentException(
+                    "Sender account must follow format FI + 3 digit transit + account number");
+        }
+    }
+
+    private void validateReceiverAccount(
+            String accountNumber) {
+
+        if (accountNumber == null
+                || accountNumber.isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Receiver account is missing");
+        }
+
+        if (!accountNumber.matches("^RI\\d{3}\\d+$")) {
+
+            throw new IllegalArgumentException(
+                    "Receiver account must follow format RI + 3 digit transit + account number");
+        }
     }
 }
