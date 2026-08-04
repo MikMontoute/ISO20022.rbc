@@ -12,11 +12,14 @@ import com.rbc.iso20022.repository.CustomerRepository;
 public class CustomerService {
 
     private final CustomerRepository repository;
+    private final AuditService auditService;
 
     public CustomerService(
-            CustomerRepository repository) {
+            CustomerRepository repository,
+            AuditService auditService) {
 
         this.repository = repository;
+        this.auditService = auditService;
     }
 
     public void createOrUpdateCustomer(
@@ -44,6 +47,14 @@ public class CustomerService {
                     LocalDateTime.now());
 
             repository.save(customer);
+            auditService.audit(
+                    null,
+                    null,
+                    null,
+                    "CUSTOMER_UPDATED",
+                    customer.getAccountNumber(),
+                    "SUCCESS",
+                    null);
 
             return;
         }
@@ -75,5 +86,13 @@ public class CustomerService {
                 LocalDateTime.now());
 
         repository.save(customer);
+        auditService.audit(
+                null,
+                null,
+                null,
+                "CUSTOMER_CREATED",
+                customer.getAccountNumber(),
+                "SUCCESS",
+                null);
     }
 }

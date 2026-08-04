@@ -15,15 +15,17 @@ import com.rbc.iso20022.repository.PacsMessageRepository;
 public class Pacs008Service {
 
     private final PacsMessageRepository repository;
-
     private final CustomerService customerService;
-
+    private final AuditService auditService;
+    
     public Pacs008Service(
             PacsMessageRepository repository,
-            CustomerService customerService) {
+            CustomerService customerService,
+            AuditService auditService) {
 
         this.repository = repository;
         this.customerService = customerService;
+        this.auditService = auditService;
     }
 
     public String process(
@@ -37,6 +39,15 @@ public class Pacs008Service {
                 extractMessageId(document);
 
         if (repository.existsByMessageId(messageId)) {
+        	
+        	auditService.audit(
+        	        correlationId,
+        	        null,
+        	        messageId,
+        	        "DUPLICATE_MESSAGE",
+        	        "Duplicate PACS.008 MessageId detected",
+        	        "FAILED",
+        	        null);
 
             throw new DuplicateMessageException(
                     "Duplicate PACS.008 MessageId: "
@@ -131,6 +142,15 @@ public class Pacs008Service {
         entity.setOriginalXml(xml);
 
         repository.save(entity);
+        
+        auditService.audit(
+                correlationId,
+                null,
+                messageId,
+                "PAYMENT_SAVED",
+                "Payment persisted successfully",
+                "SUCCESS",
+                null);
 
         /*
          * Create or Update Debtor Customer
