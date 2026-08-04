@@ -131,4 +131,20 @@ public class PacsMessageEntity {
 	public String getCreditorBic() {
 	    return creditorBic;
 	}
+
+	public String getDebtorName() {
+		return debtorName;
+	}
+
+	public String getDebtorAccount() {
+		return debtorAccount;
+	}
+
+	public String getCreditorName() {
+		return creditorName;
+	}
+
+	public String getCreditorAccount() {
+		return creditorAccount;
+	}
 }

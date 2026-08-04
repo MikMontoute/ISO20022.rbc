@@ -1,0 +1,23 @@
+Solution Architecture Overview
+ISO 20022 PACS.008 Payment Processing Service
+Purpose
+This application provides a lightweight ISO 20022 PACS.008 payment processing platform capable of receiving financial institution payment messages, validating them, persisting transaction and customer information, enforcing idempotency, and returning PACS.002 status acknowledgements.
+
+Core Flow: 
+1.	Client FI post PACS.008 request to the endpoint
+2.	PaymentController begins processing the request using spring boot framework to ensure the request type is XML and Request Headers are present
+3.	Secure PACS008Parser would utilize SAX to aid with XXS protection before using jakarta to ensure the XML is wholesome and in the correct format
+4.	I created three services to deal with the bigger parts of the solution
+a.	Pacs008Service has all the business controls, it also controls storing is transaction data once all criteria is met.
+b.	PACS.002 generated the pacs.002 response bases on the outcome of the business logic (success/failure)
+c.	Customer Service mainly for storing the customer data
+5.	The solution has many models due to the large cumbersome nature of a pacs message
+6.	Two entities exist currently to create the table in the H2 db if they done exist (first time user)
+
+Future Enhancements
+•	Full PACS.008.001.12 XSD Validation
+•	XML Digital Signatures
+•	Immutable Audit Trail
+•	Automate Testing
+•	Additional business validations (my package did not have Appendix B and C)
+

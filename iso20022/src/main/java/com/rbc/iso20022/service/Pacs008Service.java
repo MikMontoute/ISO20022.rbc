@@ -16,10 +16,14 @@ public class Pacs008Service {
 
     private final PacsMessageRepository repository;
 
+    private final CustomerService customerService;
+
     public Pacs008Service(
-            PacsMessageRepository repository) {
+            PacsMessageRepository repository,
+            CustomerService customerService) {
 
         this.repository = repository;
+        this.customerService = customerService;
     }
 
     public String process(
@@ -119,8 +123,7 @@ public class Pacs008Service {
         entity.setCorrelationId(
                 correlationId);
 
-        entity.setStatus(
-                "PROCESSED");
+        entity.setStatus("PROCESSED");
 
         entity.setReceivedTimestamp(
                 LocalDateTime.now());
@@ -128,6 +131,24 @@ public class Pacs008Service {
         entity.setOriginalXml(xml);
 
         repository.save(entity);
+
+        /*
+         * Create or Update Debtor Customer
+         */
+        customerService.createOrUpdateCustomer(
+                entity.getDebtorName(),
+                entity.getDebtorAccount(),
+                entity.getDebtorBic(),
+                "SENDER");
+
+        /*
+         * Create or Update Creditor Customer
+         */
+        customerService.createOrUpdateCustomer(
+                entity.getCreditorName(),
+                entity.getCreditorAccount(),
+                entity.getCreditorBic(),
+                "RECEIVER");
 
         return "SUCCESS";
     }
