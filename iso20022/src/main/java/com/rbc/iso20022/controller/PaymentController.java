@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rbc.iso20022.exception.DuplicateMessageException;
 import com.rbc.iso20022.service.AuditService;
+import com.rbc.iso20022.service.DigitalSignatureService;
 import com.rbc.iso20022.service.Pacs002Service;
 import com.rbc.iso20022.service.Pacs008Service;
 import com.rbc.iso20022.validation.HeaderValidator;
@@ -22,17 +23,20 @@ public class PaymentController {
     private final Pacs002Service pacs002Service;
     private final HeaderValidator headerValidator;
     private final AuditService auditService;
+    private final DigitalSignatureService digitalSignatureService;
     
     public PaymentController(
             Pacs008Service pacs008Service,
             Pacs002Service pacs002Service,
             HeaderValidator headerValidator,
-            AuditService auditService) {
+            AuditService auditService,
+            DigitalSignatureService digitalSignatureService) {
 
         this.pacs008Service = pacs008Service;
         this.pacs002Service = pacs002Service;
         this.headerValidator = headerValidator;
         this.auditService = auditService;
+        this.digitalSignatureService = digitalSignatureService;
     }
 
     
@@ -81,6 +85,8 @@ public class PaymentController {
             String pacs002 =
                     pacs002Service.buildSuccessResponse(
                             originalMsgId);
+           
+            pacs002 =  digitalSignatureService.signXml(pacs002);
             
 
             return ResponseEntity.ok()
@@ -105,6 +111,7 @@ public class PaymentController {
                             originalMsgId,
                             "DUPL",
                             ex.getMessage());
+            pacs002 =  digitalSignatureService.signXml(pacs002);
 
             return ResponseEntity
                     .status(409)
@@ -127,6 +134,7 @@ public class PaymentController {
                             originalMsgId,
                             "FF01",
                             ex.getMessage());
+            pacs002 =  digitalSignatureService.signXml(pacs002);
 
             return ResponseEntity
                     .badRequest()
@@ -149,6 +157,7 @@ public class PaymentController {
                             originalMsgId,
                             "NARR",
                             ex.getMessage());
+            pacs002 =  digitalSignatureService.signXml(pacs002);
 
             return ResponseEntity
                     .internalServerError()
