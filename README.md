@@ -49,13 +49,21 @@ X-Correlation-ID: CORR-NNN
 
 SAMPLE XML:
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12">
+
     <FIToFICstmrCdtTrf>
 
         <GrpHdr>
-            <MsgId>MSGID202608032120</MsgId>
-            <CreDtTm>2026-08-03T10:15:30Z</CreDtTm>
+            <MsgId>MSG202608050001</MsgId>
+            <CreDtTm>2026-08-05T10:15:30Z</CreDtTm>
             <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>150.00</CtrlSum>
+            <IntrBkSttlmDt>2026-08-05</IntrBkSttlmDt>
+
+            <SttlmInf>
+                <SttlmMtd>CLRG</SttlmMtd>
+            </SttlmInf>
         </GrpHdr>
 
         <CdtTrfTxInf>
@@ -66,13 +74,11 @@ SAMPLE XML:
                 <TxId>TX000001</TxId>
             </PmtId>
 
-            <IntrBkSttlmAmt Ccy="USD">
-                150.00
-            </IntrBkSttlmAmt>
+            <IntrBkSttlmAmt Ccy="USD">150.00</IntrBkSttlmAmt>
 
-            <IntrBkSttlmDt>
-                2026-08-03
-            </IntrBkSttlmDt>
+            <IntrBkSttlmDt>2026-08-05</IntrBkSttlmDt>
+
+            <ChrgBr>SHAR</ChrgBr>
 
             <Dbtr>
                 <Nm>ABC Manufacturing Ltd</Nm>
@@ -92,6 +98,12 @@ SAMPLE XML:
                 </FinInstnId>
             </DbtrAgt>
 
+            <CdtrAgt>
+                <FinInstnId>
+                    <BICFI>REPUBBBBXXX</BICFI>
+                </FinInstnId>
+            </CdtrAgt>
+
             <Cdtr>
                 <Nm>XYZ Trading Inc</Nm>
             </Cdtr>
@@ -104,13 +116,12 @@ SAMPLE XML:
                 </Id>
             </CdtrAcct>
 
-            <CdtrAgt>
-                <FinInstnId>
-                    <BICFI>REPUBBBBXXX</BICFI>
-                </FinInstnId>
-            </CdtrAgt>
+            <RmtInf>
+                <Ustrd>Invoice12345</Ustrd>
+            </RmtInf>
 
         </CdtTrfTxInf>
 
     </FIToFICstmrCdtTrf>
+
 </Document>
