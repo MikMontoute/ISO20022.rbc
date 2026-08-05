@@ -19,7 +19,9 @@ public class PaymentAuditEntity {
     private String messageId;
 
     private String eventType;
-
+    
+    @Lob
+    @Column
     private String eventDetail;
 
     private String status;

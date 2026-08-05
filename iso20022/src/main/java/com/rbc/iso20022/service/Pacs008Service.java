@@ -17,21 +17,27 @@ public class Pacs008Service {
     private final PacsMessageRepository repository;
     private final CustomerService customerService;
     private final AuditService auditService;
+    private final XsdValidationService xsdValidationService;
     
     public Pacs008Service(
             PacsMessageRepository repository,
             CustomerService customerService,
-            AuditService auditService) {
+            AuditService auditService,
+            XsdValidationService xsdValidationService) {
 
         this.repository = repository;
         this.customerService = customerService;
         this.auditService = auditService;
+        this.xsdValidationService = xsdValidationService;
     }
+    
 
     public String process(
             String xml,
             String correlationId) {
 
+    	xsdValidationService.validate(xml);
+    	
         Document document =
                 Pacs008Parser.parse(xml);
 
@@ -175,6 +181,8 @@ public class Pacs008Service {
 
     public String getMessageId(String xml) {
 
+    	xsdValidationService.validate(xml);
+    	
         Document document =
                 Pacs008Parser.parse(xml);
 
