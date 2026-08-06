@@ -15,21 +15,29 @@ import com.rbc.iso20022.repository.PacsMessageRepository;
 public class Pacs008Service {
 
     private final PacsMessageRepository repository;
-
     private final CustomerService customerService;
-
+    private final AuditService auditService;
+    private final XsdValidationService xsdValidationService;
+    
     public Pacs008Service(
             PacsMessageRepository repository,
-            CustomerService customerService) {
+            CustomerService customerService,
+            AuditService auditService,
+            XsdValidationService xsdValidationService) {
 
         this.repository = repository;
         this.customerService = customerService;
+        this.auditService = auditService;
+        this.xsdValidationService = xsdValidationService;
     }
+    
 
     public String process(
             String xml,
             String correlationId) {
 
+    	xsdValidationService.validate(xml);
+    	
         Document document =
                 Pacs008Parser.parse(xml);
 
@@ -37,6 +45,15 @@ public class Pacs008Service {
                 extractMessageId(document);
 
         if (repository.existsByMessageId(messageId)) {
+        	
+        	auditService.audit(
+        	        correlationId,
+        	        null,
+        	        messageId,
+        	        "DUPLICATE_MESSAGE",
+        	        "Duplicate PACS.008 MessageId detected",
+        	        "FAILED",
+        	        null);
 
             throw new DuplicateMessageException(
                     "Duplicate PACS.008 MessageId: "
@@ -131,6 +148,15 @@ public class Pacs008Service {
         entity.setOriginalXml(xml);
 
         repository.save(entity);
+        
+        auditService.audit(
+                correlationId,
+                null,
+                messageId,
+                "PAYMENT_SAVED",
+                "Payment persisted successfully",
+                "SUCCESS",
+                null);
 
         /*
          * Create or Update Debtor Customer
@@ -155,6 +181,8 @@ public class Pacs008Service {
 
     public String getMessageId(String xml) {
 
+    	xsdValidationService.validate(xml);
+    	
         Document document =
                 Pacs008Parser.parse(xml);
 
