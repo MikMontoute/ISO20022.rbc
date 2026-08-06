@@ -49,64 +49,81 @@ X-Correlation-ID: CORR-NNN
 
 SAMPLE XML:
 
-    <GrpHdr>
-        <MsgId>MSGID202608032120</MsgId>
-        <CreDtTm>2026-08-03T10:15:30Z</CreDtTm>
-        <NbOfTxs>1</NbOfTxs>
-    </GrpHdr>
 
-    <CdtTrfTxInf>
+<?xml version="1.0" encoding="UTF-8"?>
 
-        <PmtId>
-            <InstrId>INST000001</InstrId>
-            <EndToEndId>E2E000001</EndToEndId>
-            <TxId>TX000001</TxId>
-        </PmtId>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12">
 
-        <IntrBkSttlmAmt Ccy="USD">
-            150.00
-        </IntrBkSttlmAmt>
+    <FIToFICstmrCdtTrf>
 
-        <IntrBkSttlmDt>
-            2026-08-03
-        </IntrBkSttlmDt>
+        <GrpHdr>
+            <MsgId>MSG20260805201900</MsgId>
+            <CreDtTm>2026-08-05T10:15:30Z</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>15.01</CtrlSum>
+            <IntrBkSttlmDt>2026-08-05</IntrBkSttlmDt>
 
-        <Dbtr>
-            <Nm>ABC Manufacturing Ltd</Nm>
-        </Dbtr>
+            <SttlmInf>
+                <SttlmMtd>CLRG</SttlmMtd>
+            </SttlmInf>
+        </GrpHdr>
 
-        <DbtrAcct>
-            <Id>
-                <Othr>
-                    <Id>FI123456789012</Id>
-                </Othr>
-            </Id>
-        </DbtrAcct>
+        <CdtTrfTxInf>
 
-        <DbtrAgt>
-            <FinInstnId>
-                <BICFI>RBCCTTPSXXX</BICFI>
-            </FinInstnId>
-        </DbtrAgt>
+            <PmtId>
+                <InstrId>INST000001</InstrId>
+                <EndToEndId>E2E000001</EndToEndId>
+                <TxId>TX000001</TxId>
+            </PmtId>
 
-        <Cdtr>
-            <Nm>XYZ Trading Inc</Nm>
-        </Cdtr>
+            <IntrBkSttlmAmt Ccy="USD">150.00</IntrBkSttlmAmt>
 
-        <CdtrAcct>
-            <Id>
-                <Othr>
-                    <Id>RI456987654321</Id>
-                </Othr>
-            </Id>
-        </CdtrAcct>
+            <IntrBkSttlmDt>2026-08-05</IntrBkSttlmDt>
 
-        <CdtrAgt>
-            <FinInstnId>
-                <BICFI>REPUBBBBXXX</BICFI>
-            </FinInstnId>
-        </CdtrAgt>
+            <ChrgBr>SHAR</ChrgBr>
 
-    </CdtTrfTxInf>
+            <Dbtr>
+                <Nm>ABC Manufacturing Ltd</Nm>
+            </Dbtr>
 
-</FIToFICstmrCdtTrf>
+            <DbtrAcct>
+                <Id>
+                    <Othr>
+                        <Id>FI999456789012</Id>
+                    </Othr>
+                </Id>
+            </DbtrAcct>
+
+            <DbtrAgt>
+                <FinInstnId>
+                    <BICFI>RBCCTTPSXXX</BICFI>
+                </FinInstnId>
+            </DbtrAgt>
+
+            <CdtrAgt>
+                <FinInstnId>
+                    <BICFI>REPUBBBBXXX</BICFI>
+                </FinInstnId>
+            </CdtrAgt>
+
+            <Cdtr>
+                <Nm>XYZ Trading Inc</Nm>
+            </Cdtr>
+
+            <CdtrAcct>
+                <Id>
+                    <Othr>
+                        <Id>RI88898765421</Id>
+                    </Othr>
+                </Id>
+            </CdtrAcct>
+
+            <RmtInf>
+                <Ustrd>Invoice12345</Ustrd>
+            </RmtInf>
+
+        </CdtTrfTxInf>
+
+    </FIToFICstmrCdtTrf>
+
+</Document>
