@@ -1,3 +1,9 @@
 2026-08-03 21:57:14.691310-04:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "truncate [*]PACS_MESSAGES"; expected "TABLE"; SQL statement:
 truncate PACS_MESSAGES [42001-224]
+2026-08-05 19:23:23.502294-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "EVENT_DETAIL CHARACTER VARYING(255)": "'PACS.008 failed XSD validation: cvc-complex-type.2.4.a: Invalid content was fou... (673)"; SQL statement:
+insert into payment_audit (correlation_id,event_detail,event_timestamp,event_type,message_id,payload,request_id,status,id) values (?,?,?,?,?,?,?,?,default) [22001-224]
+2026-08-05 19:23:39.943678-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "EVENT_DETAIL CHARACTER VARYING(255)": "'PACS.008 failed XSD validation: cvc-complex-type.2.4.a: Invalid content was fou... (673)"; SQL statement:
+insert into payment_audit (correlation_id,event_detail,event_timestamp,event_type,message_id,payload,request_id,status,id) values (?,?,?,?,?,?,?,?,default) [22001-224]

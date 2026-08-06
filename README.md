@@ -48,69 +48,65 @@ X-Request-ID: REQ-NNN
 X-Correlation-ID: CORR-NNN
 
 SAMPLE XML:
-<?xml version="1.0" encoding="UTF-8"?>
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.12">
-    <FIToFICstmrCdtTrf>
 
-        <GrpHdr>
-            <MsgId>MSGID202608032120</MsgId>
-            <CreDtTm>2026-08-03T10:15:30Z</CreDtTm>
-            <NbOfTxs>1</NbOfTxs>
-        </GrpHdr>
+    <GrpHdr>
+        <MsgId>MSGID202608032120</MsgId>
+        <CreDtTm>2026-08-03T10:15:30Z</CreDtTm>
+        <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
 
-        <CdtTrfTxInf>
+    <CdtTrfTxInf>
 
-            <PmtId>
-                <InstrId>INST000001</InstrId>
-                <EndToEndId>E2E000001</EndToEndId>
-                <TxId>TX000001</TxId>
-            </PmtId>
+        <PmtId>
+            <InstrId>INST000001</InstrId>
+            <EndToEndId>E2E000001</EndToEndId>
+            <TxId>TX000001</TxId>
+        </PmtId>
 
-            <IntrBkSttlmAmt Ccy="USD">
-                150.00
-            </IntrBkSttlmAmt>
+        <IntrBkSttlmAmt Ccy="USD">
+            150.00
+        </IntrBkSttlmAmt>
 
-            <IntrBkSttlmDt>
-                2026-08-03
-            </IntrBkSttlmDt>
+        <IntrBkSttlmDt>
+            2026-08-03
+        </IntrBkSttlmDt>
 
-            <Dbtr>
-                <Nm>ABC Manufacturing Ltd</Nm>
-            </Dbtr>
+        <Dbtr>
+            <Nm>ABC Manufacturing Ltd</Nm>
+        </Dbtr>
 
-            <DbtrAcct>
-                <Id>
-                    <Othr>
-                        <Id>FI123456789012</Id>
-                    </Othr>
-                </Id>
-            </DbtrAcct>
+        <DbtrAcct>
+            <Id>
+                <Othr>
+                    <Id>FI123456789012</Id>
+                </Othr>
+            </Id>
+        </DbtrAcct>
 
-            <DbtrAgt>
-                <FinInstnId>
-                    <BICFI>RBCCTTPSXXX</BICFI>
-                </FinInstnId>
-            </DbtrAgt>
+        <DbtrAgt>
+            <FinInstnId>
+                <BICFI>RBCCTTPSXXX</BICFI>
+            </FinInstnId>
+        </DbtrAgt>
 
-            <Cdtr>
-                <Nm>XYZ Trading Inc</Nm>
-            </Cdtr>
+        <Cdtr>
+            <Nm>XYZ Trading Inc</Nm>
+        </Cdtr>
 
-            <CdtrAcct>
-                <Id>
-                    <Othr>
-                        <Id>RI456987654321</Id>
-                    </Othr>
-                </Id>
-            </CdtrAcct>
+        <CdtrAcct>
+            <Id>
+                <Othr>
+                    <Id>RI456987654321</Id>
+                </Othr>
+            </Id>
+        </CdtrAcct>
 
-            <CdtrAgt>
-                <FinInstnId>
-                    <BICFI>REPUBBBBXXX</BICFI>
-                </FinInstnId>
-            </CdtrAgt>
+        <CdtrAgt>
+            <FinInstnId>
+                <BICFI>REPUBBBBXXX</BICFI>
+            </FinInstnId>
+        </CdtrAgt>
 
-        </CdtTrfTxInf>
+    </CdtTrfTxInf>
 
-    </FIToFICstmrCdtTrf>
-</Document>
+</FIToFICstmrCdtTrf>
